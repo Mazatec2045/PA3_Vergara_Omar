@@ -2,16 +2,17 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <limits>
+
 using namespace std;
 
-// Global constants
+// Constants
 const int MAX_STUDENTS = 25;
 const int MAX_GRADES = 5;
 const string FILENAME = "NamesGrades.txt";
 
-// Function prototypes
-int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], int maxStudents);
-void displayMenu();
+// Function prototypes 
+int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], const string& fileName, int maxStudents);
 void displayAverages(string students[], int grades[][MAX_GRADES], int studentCount);
 void displayMax(string students[], int grades[][MAX_GRADES], int studentCount);
 void displayMin(string students[], int grades[][MAX_GRADES], int studentCount);
@@ -19,66 +20,87 @@ char getLetterGrade(double grade);
 int getLongestNameLength(string students[], int studentCount);
 
 int main() {
+    // Variables
     string studentNames[MAX_STUDENTS];
     int studentGrades[MAX_STUDENTS][MAX_GRADES];
-    int studentCount = loadStudentNamesGrades(studentNames, studentGrades, MAX_STUDENTS);
+    int numStudentsLoaded = 0;
+    int userChoice;
 
-    int choice;
+    // Load student data
+    numStudentsLoaded = loadStudentNamesGrades(studentNames, studentGrades, FILENAME, MAX_STUDENTS);
+
+    // Menu loop
     do {
-        displayMenu();
-        cout << "Enter your choice: ";
-        cin >> choice;
+        cout << "Grade Report Program\n" << endl;
+        cout << setw(33) << right << "1. Display Average Grade\n";
+        cout << setw(33) << right << "2. Display Maximum Grade\n";
+        cout << setw(33) << right << "3. Display Minimum Grade\n";
+        cout << setw(24) << right << "4. Quit Program\n" << endl;
+        cout << "Enter your choice (1-4): ";
+        cin >> userChoice;
+        
+        // Input validation 
+        while (cin.fail()) {
+    
+            cin.clear(); // Clear error state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        }
 
-        switch (choice) {
+        switch (userChoice) {
         case 1:
-            displayAverages(studentNames, studentGrades, studentCount);
+            displayAverages(studentNames, studentGrades, numStudentsLoaded);
             break;
         case 2:
-            displayMax(studentNames, studentGrades, studentCount);
+            displayMax(studentNames, studentGrades, numStudentsLoaded);
             break;
         case 3:
-            displayMin(studentNames, studentGrades, studentCount);
+            displayMin(studentNames, studentGrades, numStudentsLoaded);
             break;
         case 4:
-            cout << "Exiting program. Goodbye!" << endl;
+            cout << "Exiting program." << endl;
             break;
         default:
-            cout << "Invalid choice. Please enter again." << endl;
+            cout << "Invalid choice. Please enter a number (1-4).\n" << endl;
+             
         }
-    } while (choice != 4);
+    } while (userChoice != 4);
 
     return 0;
 }
 
-int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], int maxStudents) {
-    ifstream file(FILENAME);
-    if (!file) {
-        cout << "Error opening file " << FILENAME << ". Exiting program." << endl;
-        exit(EXIT_FAILURE);
+// Functions
+
+// Function to load student names and grades from file
+int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], const string& fileName, int maxStudents) {
+    ifstream inputFile(fileName);
+    if (!inputFile.is_open()) {
+        cout << "Error opening file: " << fileName << endl;
+        return 0;
     }
 
-    int studentCount = 0;
-    while (studentCount < maxStudents && file >> students[studentCount]) {
-        for (int i = 0; i < MAX_GRADES; ++i) {
-            file >> grades[studentCount][i];
+    int count = 0;
+    string firstName, lastName;
+
+    while (inputFile >> firstName >> lastName && count < maxStudents) {
+        students[count] = firstName + " " + lastName;
+        for (int i = 0; i < MAX_GRADES; i++) {
+            inputFile >> grades[count][i];
         }
-        ++studentCount;
+        count++;
     }
 
-    file.close();
-    return studentCount;
+    inputFile.close();
+    return count;
 }
 
-void displayMenu() {
-    cout << "Menu:\n";
-    cout << "1. Display Average Grades\n";
-    cout << "2. Display Maximum Grades\n";
-    cout << "3. Display Minimum Grades\n";
-    cout << "4. Quit\n";
-}
-
+// Function to display average grades
 void displayAverages(string students[], int grades[][MAX_GRADES], int studentCount) {
-    cout << "Student Averages:\n";
+    int longestName = getLongestNameLength(students, studentCount);
+
+    cout << "\nGrade Averages\n";
+    cout << setw(longestName) << left << "Name"
+        << " Average Grade\n";
+
     for (int i = 0; i < studentCount; ++i) {
         double total = 0;
         for (int j = 0; j < MAX_GRADES; ++j) {
@@ -86,38 +108,61 @@ void displayAverages(string students[], int grades[][MAX_GRADES], int studentCou
         }
         double average = total / MAX_GRADES;
         char letterGrade = getLetterGrade(average);
-        cout << students[i] << ": Average = " << average << ", Grade = " << letterGrade << endl;
+
+        cout << setw(longestName) << left << students[i];
+        cout << setw(8) << fixed << setprecision(1) << average;
+        cout << letterGrade << endl;
     }
 }
 
+
+// Function to display maximum grades
 void displayMax(string students[], int grades[][MAX_GRADES], int studentCount) {
-    cout << "Student Maximum Grades:\n";
+    int longestName = getLongestNameLength(students, studentCount);
+
+    cout << "\nGrade Maximums\n";
+    cout << setw(longestName) << left << "Name"
+        << "  Maximum  Grade\n";
+
     for (int i = 0; i < studentCount; ++i) {
-        int maxGrade = grades[i][0];
+        int maxGrade = grades[i][0]; // Start with the first grade
         for (int j = 1; j < MAX_GRADES; ++j) {
             if (grades[i][j] > maxGrade) {
                 maxGrade = grades[i][j];
             }
         }
         char letterGrade = getLetterGrade(maxGrade);
-        cout << students[i] << ": Maximum Grade = " << maxGrade << ", Grade = " << letterGrade << endl;
+
+        cout << setw(longestName) << left << students[i];
+        cout << setw(8) << maxGrade;
+        cout << letterGrade << endl;
     }
 }
 
+// Function to display minimum grades
 void displayMin(string students[], int grades[][MAX_GRADES], int studentCount) {
-    cout << "Student Minimum Grades:\n";
+    int longestName = getLongestNameLength(students, studentCount);
+
+    cout << "\nGrade Minimums\n";
+    cout << setw(longestName) << left << "Name"
+        << "  Minimum  Grade\n";
+
     for (int i = 0; i < studentCount; ++i) {
-        int minGrade = grades[i][0];
+        int minGrade = grades[i][0]; // Start with the first grade
         for (int j = 1; j < MAX_GRADES; ++j) {
             if (grades[i][j] < minGrade) {
                 minGrade = grades[i][j];
             }
         }
         char letterGrade = getLetterGrade(minGrade);
-        cout << students[i] << ": Minimum Grade = " << minGrade << ", Grade = " << letterGrade << endl;
+
+        cout << setw(longestName) << left << students[i];
+        cout << setw(8) << minGrade;
+        cout << letterGrade << endl;
     }
 }
 
+// Function to convert numerical grade to letter grade
 char getLetterGrade(double grade) {
     if (grade >= 90) {
         return 'A';
@@ -136,6 +181,7 @@ char getLetterGrade(double grade) {
     }
 }
 
+// Function to get the length of the longest name
 int getLongestNameLength(string students[], int studentCount) {
     int maxLength = 0;
     for (int i = 0; i < studentCount; ++i) {

@@ -2,7 +2,6 @@
 // 04/12/2024
 // Program Assignment 3 
 
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -74,7 +73,7 @@ int main() {
 // Functions
 
 // Function to load student names and grades from file
-int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES],  string& fileName, int maxStudents) {
+int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], const string& fileName, int maxStudents) {
     
     // Open the input file
     ifstream inputFile(fileName);

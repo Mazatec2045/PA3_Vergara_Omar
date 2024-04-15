@@ -1,5 +1,5 @@
 // Omar Vergara
-// 04/12/2024
+// 04/14/2024
 // Program Assignment 3 
 
 
@@ -34,7 +34,7 @@ int main() {
     // Load student data
     numStudentsLoaded = loadStudentNamesGrades(studentNames, studentGrades, FILENAME, MAX_STUDENTS);
 
-    // Menu loop
+    // Menu loop 
     do {
         cout << "Grade Report Program\n" << endl;
         cout << setw(33) << right << "1. Display Average Grade\n";
@@ -74,7 +74,7 @@ int main() {
 // Functions
 
 // Function to load student names and grades from file
-int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES],  string& fileName, int maxStudents) {
+int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], const string& fileName, int maxStudents) {
     
     // Open the input file
     ifstream inputFile(fileName);
@@ -102,7 +102,7 @@ int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES],  string&
         count++;
     }
     
-    //Closes file and returns total number of students loaded 
+    //Closes the file, let's be tidy
     inputFile.close();
     return count;
 }
@@ -114,8 +114,7 @@ void displayAverages(string students[], int grades[][MAX_GRADES], int studentCou
     int longestName = getLongestNameLength(students, studentCount);
 
     cout << "\nGrade Averages\n";
-    cout << setw(longestName) << left << "Name"
-        << " Average Grade\n";
+    cout << setw(longestName) << left << "Name" << " Average Grade\n";
 
     // Loops through each student and calculates total 
     for (int i = 0; i < studentCount; ++i) {
@@ -129,9 +128,8 @@ void displayAverages(string students[], int grades[][MAX_GRADES], int studentCou
         char letterGrade = getLetterGrade(average);
 
         //Prints name, average grade and letter grade 
-        cout << setw(longestName) << left << students[i];
-        cout << setw(8) << fixed << setprecision(1) << average;
-        cout << letterGrade << endl;
+        cout << setw(19) << left << students[i];
+        cout << setw(8) << fixed << setprecision(1) << average << letterGrade << endl;
     }
 }
 
@@ -141,9 +139,8 @@ void displayMax(string students[], int grades[][MAX_GRADES], int studentCount) {
     // Find length of longest student name
     int longestName = getLongestNameLength(students, studentCount);  
 
-    cout << "\nGrade Maximums\n";
-    cout << setw(longestName) << left << "Name"
-        << "  Maximum  Grade\n";
+    cout << "\nGrade Maximums\n"; 
+    cout << setw(longestName) << left << "Name" << "  Maximum  Grade\n";
 
     // Loop through each student 
     for (int i = 0; i < studentCount; ++i) {
@@ -161,21 +158,18 @@ void displayMax(string students[], int grades[][MAX_GRADES], int studentCount) {
         char letterGrade = getLetterGrade(maxGrade);
 
         // Prints name, highest grade and letter grade
-        cout << setw(longestName) << left << students[i];
-        cout << setw(8) << maxGrade;
-        cout << letterGrade << endl;
+        cout << setw(21) << left << students[i];
+        cout << setw(8) << maxGrade << letterGrade << endl;
     }
 }
 
 // Function to display minimum grades
 void displayMin(string students[], int grades[][MAX_GRADES], int studentCount) {
-
+  
     // Finds longest name 
     int longestName = getLongestNameLength(students, studentCount);
-
     cout << "\nGrade Minimums\n";
-    cout << setw(longestName) << left << "Name"
-        << "  Minimum  Grade\n";
+    cout << setw(longestName) << left << "Name" << "  Minimum  Grade\n";
 
     // Loop through each student 
     for (int i = 0; i < studentCount; ++i) {
@@ -194,9 +188,8 @@ void displayMin(string students[], int grades[][MAX_GRADES], int studentCount) {
         char letterGrade = getLetterGrade(minGrade);
 
         // Prints name, minimum grade and letter grade
-        cout << setw(longestName) << left << students[i];
-        cout << setw(8) << minGrade;
-        cout << letterGrade << endl;
+        cout << setw(21) << left << students[i];
+        cout << setw(8) << minGrade << letterGrade << endl;
     }
 }
 

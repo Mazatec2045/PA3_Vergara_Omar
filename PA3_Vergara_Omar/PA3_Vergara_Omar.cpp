@@ -2,6 +2,7 @@
 // 04/14/2024
 // Program Assignment 3 
 
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -74,7 +75,7 @@ int main() {
 
 // Function to load student names and grades from file
 int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], const string& fileName, int maxStudents) {
-    
+
     // Open the input file
     ifstream inputFile(fileName);
 
@@ -100,7 +101,7 @@ int loadStudentNamesGrades(string students[], int grades[][MAX_GRADES], const st
         // Increment student count
         count++;
     }
-    
+
     //Closes the file, let's be tidy
     inputFile.close();
     return count;
@@ -136,17 +137,17 @@ void displayAverages(string students[], int grades[][MAX_GRADES], int studentCou
 void displayMax(string students[], int grades[][MAX_GRADES], int studentCount) {
 
     // Find length of longest student name
-    int longestName = getLongestNameLength(students, studentCount);  
+    int longestName = getLongestNameLength(students, studentCount);
 
-    cout << "\nGrade Maximums\n"; 
+    cout << "\nGrade Maximums\n";
     cout << setw(longestName) << left << "Name" << "  Maximum  Grade\n";
 
     // Loop through each student 
     for (int i = 0; i < studentCount; ++i) {
-        
+
         // Start with 1st grade as the max 
         int maxGrade = grades[i][0];
-        
+
         // Checks grades to find the highest one
         for (int j = 1; j < MAX_GRADES; ++j) {
             if (grades[i][j] > maxGrade) {
@@ -164,7 +165,7 @@ void displayMax(string students[], int grades[][MAX_GRADES], int studentCount) {
 
 // Function to display minimum grades
 void displayMin(string students[], int grades[][MAX_GRADES], int studentCount) {
-  
+
     // Finds longest name 
     int longestName = getLongestNameLength(students, studentCount);
     cout << "\nGrade Minimums\n";
@@ -174,7 +175,7 @@ void displayMin(string students[], int grades[][MAX_GRADES], int studentCount) {
     for (int i = 0; i < studentCount; ++i) {
 
         // Starts 1st grade as minimum 
-        int minGrade = grades[i][0]; 
+        int minGrade = grades[i][0];
 
         // Checks grades to find lowest one
         for (int j = 1; j < MAX_GRADES; ++j) {

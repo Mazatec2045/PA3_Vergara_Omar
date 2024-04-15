@@ -2,7 +2,6 @@
 // 04/14/2024
 // Program Assignment 3 
 
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
